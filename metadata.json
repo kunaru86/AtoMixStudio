@@ -1,0 +1,5 @@
+{
+  "name": "RUSH XR // AUTOMIX STUDIO",
+  "description": "A unified VJ and DJ studio with floating window controls, audio-reactive 3D matrix, and camera segmentation.",
+  "requestFramePermissions": ["camera", "microphone"]
+}
