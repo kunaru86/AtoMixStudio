@@ -208,23 +208,32 @@ export default function App() {
 
   if (!booted) {
     return (
-      <div className="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center font-mono">
-        <div className="mb-4 text-fluid-sm text-orange-800 w-64">
-          {'>'} INITIALIZING AUDIO_ENGINE...<br />
-          {'>'} LOADING AUTOMIX_MODULE...<br />
-          {'>'} SYSTEM READY.
+      <div className="fixed inset-0 bg-black z-50 flex flex-col items-center justify-center font-mono selection:bg-orange-500 selection:text-black">
+        <div className="mb-6 text-fluid-sm text-orange-600/80 w-80 font-mono tracking-wider border border-orange-900/30 p-3 bg-zinc-950/80 rounded">
+          <div className="text-zinc-500 mb-1">{'>'} ATOMIX CORE v2.4</div>
+          <div className="text-orange-500">{'>'} INITIALIZING AUDIO_ENGINE...</div>
+          <div className="text-orange-500">{'>'} LOADING MAPPING_PIPELINE...</div>
+          <div className="text-green-400 font-bold">{'>'} READY FOR PROJECTION.</div>
         </div>
-        <h1 className="text-7xl font-bold text-orange-500 mb-8 tracking-tighter orbitron" style={{ textShadow: '0 0 10px rgba(255,94,0,0.5)' }}>
-          RUSH XR
+        <div className="flex items-center gap-3 mb-2">
+          <span className="text-fluid-xs px-2.5 py-0.5 rounded-full border border-orange-500/40 text-orange-400 font-mono tracking-widest uppercase bg-orange-950/40">
+            PROJECTION MAPPING & VJ
+          </span>
+        </div>
+        <h1 className="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-orange-500 to-amber-300 mb-3 tracking-wider orbitron text-center" style={{ filter: 'drop-shadow(0 0 25px rgba(255,94,0,0.4))' }}>
+          ATOMIX <span className="text-zinc-100 font-light">STUDIO</span>
         </h1>
+        <p className="text-zinc-400 text-fluid-sm tracking-widest uppercase mb-10 text-center font-mono max-w-md">
+          Hardware-Accelerated Real-Time Quad Warping • Audio Reactivity • Multi-Surface Mapping
+        </p>
         <button
           onClick={() => {
             engineRef.current = new AudioEngine();
             setBooted(true);
           }}
-          className="px-12 py-4 border-2 border-orange-600 text-orange-500 hover:bg-orange-600 hover:text-white transition-all duration-300 rounded font-bold tracking-widest orbitron"
+          className="px-10 py-3.5 border border-orange-500 text-orange-400 hover:text-black hover:bg-orange-500 transition-all duration-200 rounded font-bold tracking-widest orbitron shadow-[0_0_20px_rgba(255,94,0,0.3)] hover:shadow-[0_0_30px_rgba(255,94,0,0.6)] cursor-pointer"
         >
-          START STUDIO
+          LAUNCH STUDIO
         </button>
       </div>
     );
@@ -668,7 +677,7 @@ function Studio({ engine }: { engine: AudioEngine }) {
     win.document.write(`
       <html>
         <head>
-          <title>RUSH XR - PROJECTOR</title>
+          <title>AtoMix Studio - PROJECTOR OUTPUT</title>
           <style>
             body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; }
             .absolute { position: absolute; }
@@ -2054,14 +2063,33 @@ function Studio({ engine }: { engine: AudioEngine }) {
         
         {/* Header */}
         <header className="p-3 panel-frame border-b border-[#27272a] flex justify-between items-center pointer-events-auto shrink-0 font-mono" style={{ gridArea: 'header' }}>
-          <div className="flex items-center gap-4">
-            <span className="orbitron font-bold text-fluid-2xl text-orange-500 tracking-widest" style={{ textShadow: '0 0 5px rgba(255,94,0,0.5)' }}>
-              RUSH <span className="text-zinc-100">XR</span>
-            </span>
-            <div className="h-6 w-px bg-zinc-800"></div>
-            <span className="text-fluid-sm text-zinc-500 tracking-widest uppercase">System Uplink Active</span>
-          </div>
           <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center font-bold text-black shadow-[0_0_12px_rgba(255,94,0,0.5)]">
+                ⚡
+              </div>
+              <span className="orbitron font-bold text-fluid-xl text-orange-500 tracking-wider flex items-center gap-1.5" style={{ textShadow: '0 0 10px rgba(255,94,0,0.4)' }}>
+                ATOMIX <span className="text-zinc-100 font-light">STUDIO</span>
+              </span>
+            </div>
+            <div className="h-5 w-px bg-zinc-800"></div>
+            <span className="text-fluid-xs px-2 py-0.5 rounded border border-orange-500/30 text-orange-400 bg-orange-950/30 font-semibold tracking-widest uppercase">
+              PROJECTION ENGINE
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => updateVjSetting('isMappingActive', !vjState.isMappingActive)}
+              className={`px-3 py-1.5 border text-fluid-xs font-bold uppercase transition-all flex items-center gap-1.5 cursor-pointer rounded ${
+                vjState.isMappingActive
+                  ? 'bg-orange-500 text-black border-orange-400 shadow-[0_0_14px_rgba(255,94,0,0.5)]'
+                  : 'bg-zinc-900 text-zinc-300 border-zinc-700 hover:border-orange-500 hover:text-orange-400'
+              }`}
+              title="Toggle Quad Mapping Mode (M)"
+            >
+              <PenTool size={13} />
+              <span>{vjState.isMappingActive ? 'MAPPING LIVE' : 'MAP SURFACES'}</span>
+            </button>
             <button 
               onClick={() => {
                 const newType = 'polygon';
@@ -2072,10 +2100,10 @@ function Studio({ engine }: { engine: AudioEngine }) {
                    updateVjSetting('isMaskingActive', false);
                 }
               }}
-              className={`px-3 py-1.5 border text-fluid-sm font-bold uppercase transition-colors flex items-center justify-center ${vjState.isMaskingActive && vjState.customMask.type === 'polygon' ? 'bg-orange-600 text-white border-orange-500' : 'border-zinc-700 bg-zinc-900 text-zinc-300 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-500'}`}
+              className={`px-2.5 py-1.5 border text-fluid-xs font-bold uppercase transition-colors flex items-center justify-center rounded cursor-pointer ${vjState.isMaskingActive && vjState.customMask.type === 'polygon' ? 'bg-orange-600 text-white border-orange-500' : 'border-zinc-700 bg-zinc-900 text-zinc-300 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-500'}`}
               title="Pen Mask Tool (P)"
             >
-              <PenTool size={14} />
+              <PenTool size={13} />
             </button>
             <button 
               onClick={() => {
@@ -2087,31 +2115,32 @@ function Studio({ engine }: { engine: AudioEngine }) {
                    updateVjSetting('isMaskingActive', false);
                 }
               }}
-              className={`px-3 py-1.5 border text-fluid-sm font-bold uppercase transition-colors flex items-center justify-center ${vjState.isMaskingActive && vjState.customMask.type === 'circle' ? 'bg-orange-600 text-white border-orange-500' : 'border-zinc-700 bg-zinc-900 text-zinc-300 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-500'}`}
+              className={`px-2.5 py-1.5 border text-fluid-xs font-bold uppercase transition-colors flex items-center justify-center rounded cursor-pointer ${vjState.isMaskingActive && vjState.customMask.type === 'circle' ? 'bg-orange-600 text-white border-orange-500' : 'border-zinc-700 bg-zinc-900 text-zinc-300 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-500'}`}
               title="Circle Mask Tool"
             >
-              <Circle size={14} />
+              <Circle size={13} />
             </button>
             <button 
               onClick={() => setShowLegend(true)}
-              className="px-2 py-1.5 border border-zinc-700 text-fluid-sm font-bold uppercase transition-colors flex items-center justify-center bg-zinc-900 text-zinc-300 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-500"
-              title="Keyboard Shortcuts (?)"
+              className="px-2 py-1.5 border border-zinc-700 text-fluid-xs font-bold uppercase transition-colors flex items-center justify-center bg-zinc-900 text-zinc-300 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-500 rounded cursor-pointer"
+              title="Keyboard Shortcuts & Guide (?)"
             >
               <kbd className="font-mono">?</kbd>
             </button>
             <button 
               onClick={openProjector}
-              className="px-4 py-1.5 border border-zinc-700 text-fluid-sm font-bold uppercase transition-colors flex items-center gap-2 tracking-widest bg-zinc-900 text-zinc-300 hover:border-orange-500 hover:bg-orange-500/10 hover:text-orange-500"
+              className="px-3.5 py-1.5 border border-orange-500/50 text-fluid-xs font-bold uppercase transition-colors flex items-center gap-1.5 tracking-wider bg-orange-950/20 text-orange-400 hover:bg-orange-500 hover:text-black hover:border-orange-400 rounded cursor-pointer"
+              title="Open full-screen output window for external projector"
             >
-              <Monitor size={12} />
-              Projector Display
+              <Monitor size={13} />
+              <span>PROJECTOR OUT</span>
             </button>
             <button 
               onClick={toggleRecording}
-              className={`px-4 py-1.5 border text-fluid-sm font-bold uppercase transition-colors flex items-center gap-2 tracking-widest ${isRecording ? 'bg-red-600 text-white border-red-500' : 'bg-zinc-900 text-red-500 border-red-900/50 hover:border-red-500 hover:bg-red-900/20'}`}
+              className={`px-3 py-1.5 border text-fluid-xs font-bold uppercase transition-colors flex items-center gap-1.5 tracking-wider rounded cursor-pointer ${isRecording ? 'bg-red-600 text-white border-red-500' : 'bg-zinc-900 text-red-400 border-red-900/50 hover:border-red-500 hover:bg-red-900/20'}`}
             >
-              <div className={`w-2 h-2 ${isRecording ? 'bg-white animate-pulse' : 'bg-red-500'}`}></div>
-              {isRecording ? 'Recording...' : 'REC OUT'}
+              <div className={`w-2 h-2 rounded-full ${isRecording ? 'bg-white animate-pulse' : 'bg-red-500'}`}></div>
+              <span>{isRecording ? 'RECORDING...' : 'REC OUT'}</span>
             </button>
           </div>
         </header>
@@ -2145,8 +2174,32 @@ function Studio({ engine }: { engine: AudioEngine }) {
             }}
             tabIndex={0}
           >
+            {/* Top Workspace Status Bar */}
+            <div className="absolute top-3 left-4 z-40 flex items-center gap-2 pointer-events-auto">
+              <div className="flex items-center gap-2 px-3 py-1 bg-zinc-950/80 border border-zinc-800 rounded shadow-lg backdrop-blur-sm font-mono text-fluid-xs">
+                <span className="text-zinc-500 uppercase tracking-wider">VIEWPORT:</span>
+                <span className="text-orange-400 font-bold">{Math.round(workspaceZoom * 100)}%</span>
+                {vjState.isMappingActive && (
+                  <>
+                    <span className="text-zinc-700">|</span>
+                    <span className="text-green-400 font-bold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+                      SURFACE EDIT
+                    </span>
+                  </>
+                )}
+              </div>
+              <button
+                onClick={() => { setWorkspaceZoom(1); setWorkspacePan({x: 0, y: 0}); }}
+                className="px-2.5 py-1 text-fluid-xs font-mono font-bold bg-zinc-950/80 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 rounded transition-colors shadow-lg cursor-pointer"
+                title="Reset Zoom & Pan"
+              >
+                FIT VIEW
+              </button>
+            </div>
+
             <div className="absolute right-4 top-1/2 -translate-y-1/2 z-50 h-[clamp(12rem,20vh,20rem)] flex flex-col items-center gap-4 panel-frame p-2 rounded-full pointer-events-auto shadow-2xl">
-                 <button onClick={() => setWorkspaceZoom(z => Math.min(5, z + 0.1))} className="text-zinc-500 hover:text-white font-bold">+</button>
+                 <button onClick={() => setWorkspaceZoom(z => Math.min(5, z + 0.1))} className="text-zinc-500 hover:text-white font-bold cursor-pointer">+</button>
                  <input 
                    type="range" 
                    min="0.1" 
@@ -2157,8 +2210,8 @@ function Studio({ engine }: { engine: AudioEngine }) {
                    className="flex-1 cursor-pointer w-2 outline-none slider-vertical accent-orange-500"
                    style={{ WebkitAppearance: 'slider-vertical' } as any}
                  />
-                 <button onClick={() => setWorkspaceZoom(z => Math.max(0.1, z - 0.1))} className="text-zinc-500 hover:text-white font-bold">-</button>
-                 <button onClick={() => { setWorkspaceZoom(1); setWorkspacePan({x:0, y:0}); }} className="mt-2 text-fluid-xs font-bold text-orange-500 uppercase flex flex-col items-center"><span>RST</span></button>
+                 <button onClick={() => setWorkspaceZoom(z => Math.max(0.1, z - 0.1))} className="text-zinc-500 hover:text-white font-bold cursor-pointer">-</button>
+                 <button onClick={() => { setWorkspaceZoom(1); setWorkspacePan({x:0, y:0}); }} className="mt-2 text-fluid-xs font-bold text-orange-500 uppercase flex flex-col items-center cursor-pointer"><span>RST</span></button>
             </div>
 
             <div 
@@ -2191,52 +2244,71 @@ function Studio({ engine }: { engine: AudioEngine }) {
                 {/* Rendered Surfaces */}
                 {vjState.mapSurfaces.map(surf => (
                   <div key={surf.id} className="absolute inset-0 z-0 pointer-events-none opacity-100">
-                    <canvas ref={(el) => { if(el) surfaceCanvasesRef.current[surf.id] = el; }} className="absolute top-0 left-0 pointer-events-none border-2 border-green-500 bg-red-500/20" />
+                    <canvas 
+                      ref={(el) => { if(el) surfaceCanvasesRef.current[surf.id] = el; }} 
+                      className={`absolute top-0 left-0 pointer-events-none transition-shadow ${
+                        vjState.isMappingActive && vjState.activeMapSurfaceId === surf.id
+                          ? 'border border-orange-500/80 shadow-[0_0_15px_rgba(255,94,0,0.35)]'
+                          : vjState.isMappingActive
+                          ? 'border border-cyan-500/40'
+                          : ''
+                      }`} 
+                    />
                   </div>
                 ))}
 
-                {/* Mapping Nodes (Interactive) */}
-                {vjState.isMappingActive && vjState.mapSurfaces.map(surf => (
-                  <React.Fragment key={`nodes-${surf.id}`}>
-                    {surf.points.map((pt, i) => (
-                      <div
-                        key={`${surf.id}-pt${i}`}
-                        className={`absolute w-10 h-10 border-4 rounded-full cursor-crosshair z-50 pointer-events-auto ${vjState.activeMapSurfaceId === surf.id ? 'bg-orange-500/50 border-orange-500' : 'bg-blue-500/50 border-blue-500'}`}
-                        style={{
-                          left: `${pt.x * 100}%`, top: `${pt.y * 100}%`,
-                          transform: `translate(-50%, -50%) scale(${1 / workspaceZoom})`,
-                          boxShadow: vjState.activeMapSurfaceId === surf.id ? '0 0 20px #ff4500' : 'none'
-                        }}
-                        onMouseDown={(e) => {
-                          e.stopPropagation();
-                          if (vjState.activeMapSurfaceId !== surf.id) {
-                              updateVjSetting('activeMapSurfaceId', surf.id);
-                          }
-                          const onMouseMove = (moveEvent: MouseEvent) => {
-                            if (!workspaceRef.current) return;
-                            const rect = workspaceRef.current.getBoundingClientRect();
-                            // Normalized coordinates 0..1
-                            const x = (moveEvent.clientX - rect.left) / rect.width;
-                            const y = (moveEvent.clientY - rect.top) / rect.height;
-                            
-                            const newSurfaces = [...vjSettings.current.mapSurfaces];
-                            const targetSurf = newSurfaces.find(s => s.id === surf.id);
-                            if (targetSurf) {
-                              targetSurf.points[i] = { x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) };
-                              updateVjSetting('mapSurfaces', newSurfaces);
+                {/* Mapping Nodes (Interactive Quad Handles) */}
+                {vjState.isMappingActive && vjState.mapSurfaces.map(surf => {
+                  const isActive = vjState.activeMapSurfaceId === surf.id;
+                  const cornerNames = ['TL', 'TR', 'BR', 'BL'];
+                  return (
+                    <React.Fragment key={`nodes-${surf.id}`}>
+                      {surf.points.map((pt, i) => (
+                        <div
+                          key={`${surf.id}-pt${i}`}
+                          className={`absolute w-7 h-7 rounded-full cursor-crosshair z-50 pointer-events-auto flex items-center justify-center font-mono text-[9px] font-bold select-none transition-transform hover:scale-125 ${
+                            isActive 
+                              ? 'bg-zinc-950/90 text-orange-400 border-2 border-orange-500 shadow-[0_0_12px_rgba(255,94,0,0.8)] ring-2 ring-orange-500/30' 
+                              : 'bg-zinc-950/80 text-cyan-300 border-2 border-cyan-500/70 shadow-[0_0_6px_rgba(6,182,212,0.5)]'
+                          }`}
+                          style={{
+                            left: `${pt.x * 100}%`, top: `${pt.y * 100}%`,
+                            transform: `translate(-50%, -50%) scale(${1 / workspaceZoom})`,
+                          }}
+                          title={`Surface: ${surf.name} - Corner ${cornerNames[i]}`}
+                          onMouseDown={(e) => {
+                            e.stopPropagation();
+                            if (vjState.activeMapSurfaceId !== surf.id) {
+                                updateVjSetting('activeMapSurfaceId', surf.id);
                             }
-                          };
-                          const onMouseUp = () => {
-                            window.removeEventListener('mousemove', onMouseMove);
-                            window.removeEventListener('mouseup', onMouseUp);
-                          };
-                          window.addEventListener('mousemove', onMouseMove);
-                          window.addEventListener('mouseup', onMouseUp);
-                        }}
-                      />
-                    ))}
-                  </React.Fragment>
-                ))}
+                            const onMouseMove = (moveEvent: MouseEvent) => {
+                              if (!workspaceRef.current) return;
+                              const rect = workspaceRef.current.getBoundingClientRect();
+                              // Normalized coordinates 0..1
+                              const x = (moveEvent.clientX - rect.left) / rect.width;
+                              const y = (moveEvent.clientY - rect.top) / rect.height;
+                              
+                              const newSurfaces = [...vjSettings.current.mapSurfaces];
+                              const targetSurf = newSurfaces.find(s => s.id === surf.id);
+                              if (targetSurf) {
+                                targetSurf.points[i] = { x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) };
+                                updateVjSetting('mapSurfaces', newSurfaces);
+                              }
+                            };
+                            const onMouseUp = () => {
+                              window.removeEventListener('mousemove', onMouseMove);
+                              window.removeEventListener('mouseup', onMouseUp);
+                            };
+                            window.addEventListener('mousemove', onMouseMove);
+                            window.addEventListener('mouseup', onMouseUp);
+                          }}
+                        >
+                          {cornerNames[i]}
+                        </div>
+                      ))}
+                    </React.Fragment>
+                  );
+                })}
 
                 {/* Masking Polygon Nodes (Interactive) */}
                 {vjState.isMaskingActive && vjState.customMask.type === 'polygon' && (
@@ -2499,15 +2571,18 @@ function Studio({ engine }: { engine: AudioEngine }) {
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4 font-mono pointer-events-auto" onClick={() => setShowLegend(false)}>
           <div className="bg-zinc-950 border border-zinc-800 max-w-lg w-full shadow-2xl p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-orange-500 font-bold uppercase tracking-widest text-fluid-xl">System Uplink Commands</h2>
-              <button onClick={() => setShowLegend(false)} className="text-zinc-500 hover:text-white p-1">
+              <div className="flex items-center gap-2">
+                <span className="text-orange-500 font-bold uppercase tracking-widest text-fluid-xl orbitron">AtoMix Studio</span>
+                <span className="text-fluid-xs px-2 py-0.5 rounded border border-orange-500/40 text-orange-400 bg-orange-950/30">KEY COMMANDS</span>
+              </div>
+              <button onClick={() => setShowLegend(false)} className="text-zinc-500 hover:text-white p-1 cursor-pointer">
                 <X size={20} />
               </button>
             </div>
             
             <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-fluid-base text-zinc-300">
               <div className="flex justify-between items-center border-b border-zinc-800 pb-2">
-                <span>Toggle Mapping</span>
+                <span>Toggle Quad Mapping</span>
                 <kbd className="bg-zinc-900 border border-zinc-700 px-2 rounded text-orange-500 font-bold">M</kbd>
               </div>
               <div className="flex justify-between items-center border-b border-zinc-800 pb-2">
@@ -2515,7 +2590,7 @@ function Studio({ engine }: { engine: AudioEngine }) {
                 <kbd className="bg-zinc-900 border border-zinc-700 px-2 rounded text-orange-500 font-bold">P</kbd>
               </div>
               <div className="flex justify-between items-center border-b border-zinc-800 pb-2">
-                <span>Toggle Video</span>
+                <span>Toggle Video Layer</span>
                 <kbd className="bg-zinc-900 border border-zinc-700 px-2 rounded text-orange-500 font-bold">V</kbd>
               </div>
               <div className="flex justify-between items-center border-b border-zinc-800 pb-2">
@@ -2532,8 +2607,8 @@ function Studio({ engine }: { engine: AudioEngine }) {
               </div>
             </div>
             
-            <div className="mt-8 text-fluid-sm text-zinc-500 uppercase tracking-widest text-center border-t border-zinc-800 pt-4">
-              Rush XR Automix Studio v1.0.0
+            <div className="mt-8 text-fluid-sm text-zinc-500 uppercase tracking-widest text-center border-t border-zinc-800 pt-4 font-mono">
+              AtoMix Studio • Professional Projection Mapping & Audio-Reactive Visual Engine v2.4
             </div>
           </div>
         </div>
@@ -2717,7 +2792,7 @@ function VJPanel({ vjState, updateVjSetting, updateLayer, addLayer, removeLayer,
   const [videoTime, setVideoTime] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
   const [activeLayerId, setActiveLayerId] = useState<string | null>(vjState.layers[0]?.id || null);
-  const [activeTab, setActiveTab] = useState<'mapping'|'media'|'camera'|'visuals'|null>('visuals');
+  const [activeTab, setActiveTab] = useState<'mapping'|'media'|'camera'|'visuals'|null>('mapping');
 
   const lastStateRef = useRef(vjState);
   useEffect(() => {
@@ -2850,30 +2925,95 @@ function VJPanel({ vjState, updateVjSetting, updateLayer, addLayer, removeLayer,
                       ))}
                     </div>
 
-                    <div className="mt-2 p-4 border border-orange-500/15" style={{ padding: "1rem" }}>
+                    <div className="mt-2 p-3.5 border border-orange-500/20 bg-zinc-950/60 rounded">
                       <div className="flex justify-between items-center mb-3">
-                        <h4 className="text-fluid-sm font-bold text-orange-500 uppercase tracking-widest flex items-center gap-2">
-                           Surface Mapping
-                        </h4>
-                        <button onClick={() => updateVjSetting('isMappingActive', !vjState.isMappingActive)} className={`text-fluid-xs px-2 py-0.5 border ${vjState.isMappingActive ? 'led-active text-black font-bold' : 'btn-inactive text-zinc-400'}`}>
-                          {vjState.isMappingActive ? 'MAPPING ON' : 'MAPPING OFF'}
+                        <div className="flex items-center gap-2">
+                          <Maximize size={14} className="text-orange-500" />
+                          <h4 className="text-fluid-xs font-bold text-orange-400 uppercase tracking-widest">
+                             Surfaces ({vjState.mapSurfaces.length})
+                          </h4>
+                        </div>
+                        <button 
+                          onClick={() => updateVjSetting('isMappingActive', !vjState.isMappingActive)} 
+                          className={`text-fluid-xs px-2.5 py-1 rounded border font-bold transition-all cursor-pointer ${vjState.isMappingActive ? 'bg-orange-500 text-black border-orange-400 shadow-[0_0_10px_rgba(255,94,0,0.5)]' : 'bg-zinc-900 border-zinc-700 text-zinc-400 hover:border-orange-500 hover:text-white'}`}
+                        >
+                          {vjState.isMappingActive ? 'MAPPING LIVE' : 'EDIT MAPPING'}
                         </button>
                       </div>
-                      {vjState.isMappingActive && (
-                         <div className="flex flex-col gap-2">
-                            <button onClick={() => window.dispatchEvent(new CustomEvent('add-map-surface'))} className="w-full py-1 text-fluid-xs font-bold btn-inactive hover:bg-orange-600 hover:text-black hover:border-orange-500 uppercase transition-colors">
-                                + Add Surface
-                            </button>
-                            {vjState.mapSurfaces.map((surf: MapSurface) => (
-                                <div key={surf.id} onClick={() => updateVjSetting('activeMapSurfaceId', surf.id)} className={`flex justify-between items-center p-1.5 cursor-pointer border ${vjState.activeMapSurfaceId === surf.id ? 'led-active text-black' : 'btn-inactive text-zinc-400'}`}>
-                                    <span className="text-fluid-sm font-bold uppercase">{surf.name}</span>
-                                    <button onClick={(e) => { e.stopPropagation(); window.dispatchEvent(new CustomEvent('remove-map-surface', { detail: surf.id })); }} className="hover:text-red-500">
-                                       <X size={10} />
-                                    </button>
+
+                      <div className="flex flex-col gap-2">
+                        <div className="flex gap-1.5">
+                          <button 
+                            onClick={() => window.dispatchEvent(new CustomEvent('add-map-surface'))} 
+                            className="flex-1 py-1.5 text-fluid-xs font-bold rounded border border-orange-500/50 bg-orange-950/20 text-orange-400 hover:bg-orange-500 hover:text-black uppercase transition-all cursor-pointer"
+                          >
+                            + New Surface
+                          </button>
+                          <button 
+                            onClick={() => {
+                              if (!vjState.activeMapSurfaceId) return;
+                              const newSurfaces = vjSettings.current.mapSurfaces.map(s => {
+                                if (s.id === vjState.activeMapSurfaceId) {
+                                  return {
+                                    ...s,
+                                    points: [
+                                      { x: 0.1, y: 0.1 },
+                                      { x: 0.9, y: 0.1 },
+                                      { x: 0.9, y: 0.9 },
+                                      { x: 0.1, y: 0.9 }
+                                    ]
+                                  };
+                                }
+                                return s;
+                              });
+                              updateVjSetting('mapSurfaces', newSurfaces);
+                            }}
+                            className="px-2.5 py-1.5 text-fluid-xs font-bold rounded border border-zinc-700 bg-zinc-900 text-zinc-400 hover:text-white hover:border-zinc-500 uppercase transition-colors cursor-pointer"
+                            title="Reset selected surface quad to default box"
+                          >
+                            Reset
+                          </button>
+                        </div>
+
+                        <div className="flex flex-col gap-1.5 max-h-40 overflow-y-auto custom-scrollbar pt-1">
+                          {vjState.mapSurfaces.map((surf: MapSurface) => {
+                            const isSelected = vjState.activeMapSurfaceId === surf.id;
+                            return (
+                              <div 
+                                key={surf.id} 
+                                onClick={() => updateVjSetting('activeMapSurfaceId', surf.id)} 
+                                className={`flex justify-between items-center p-2 rounded cursor-pointer border transition-all ${
+                                  isSelected 
+                                    ? 'border-orange-500 bg-orange-500/15 text-orange-300 font-bold shadow-[0_0_8px_rgba(255,94,0,0.3)]' 
+                                    : 'border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                                }`}
+                              >
+                                <div className="flex items-center gap-2 truncate">
+                                  <div className={`w-2 h-2 rounded-full ${isSelected ? 'bg-orange-500' : 'bg-zinc-600'}`}></div>
+                                  <span className="text-fluid-xs uppercase truncate tracking-wider">{surf.name}</span>
                                 </div>
-                            ))}
-                         </div>
-                      )}
+                                <div className="flex items-center gap-1.5">
+                                  {vjState.isMappingActive && isSelected && (
+                                    <span className="text-[10px] bg-orange-500/20 text-orange-400 px-1 rounded uppercase">Active</span>
+                                  )}
+                                  {vjState.mapSurfaces.length > 1 && (
+                                    <button 
+                                      onClick={(e) => { 
+                                        e.stopPropagation(); 
+                                        window.dispatchEvent(new CustomEvent('remove-map-surface', { detail: surf.id })); 
+                                      }} 
+                                      className="p-1 hover:text-red-400 text-zinc-600 transition-colors"
+                                      title="Delete surface"
+                                    >
+                                      <X size={12} />
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
 
                     {activeLayer && (

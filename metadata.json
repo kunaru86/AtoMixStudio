@@ -1,5 +1,5 @@
 {
-  "name": "RUSH XR // AUTOMIX STUDIO",
-  "description": "A unified VJ and DJ studio with floating window controls, audio-reactive 3D matrix, and camera segmentation.",
+  "name": "AtoMix Studio",
+  "description": "Professional Projection Mapping, Real-Time Multi-Surface Quad Warping, and Audio-Reactive VJ Studio.",
   "requestFramePermissions": ["camera", "microphone"]
 }

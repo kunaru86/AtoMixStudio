@@ -1,20 +1,31 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# AtoMix Studio ⚡
+**Professional Real-Time Projection Mapping & Audio-Reactive VJ Studio**
 
-# Run and deploy your AI Studio app
+Live Site: [https://kunaru86.github.io/AtoMixStudio/](https://kunaru86.github.io/AtoMixStudio/)
 
-This contains everything you need to run your app locally.
+---
 
-View your app in AI Studio: https://ai.studio/apps/dab60bb7-f43b-43f6-9b83-16c103566353
+## Features
+- **Interactive Multi-Surface Quad Warping**: Drag and position four corner pins (`TL`, `TR`, `BR`, `BL`) with hardware-accelerated 3D homography perspective transforms.
+- **Dedicated Projector Display Window**: Dedicated external display portal window with synchronized real-time output for stage beamers & second monitors.
+- **Audio-Reactive Generative Visualizer Engine**: Multi-mode visual synth modulated by live microphone / DJ deck audio frequencies (bass, mid, highs).
+- **Masking Tools**: Polygon Pen and Circle tools for precise edge cutouts and stage masking.
+- **Built-in Automix Dual-Deck DJ Console**: Dual audio decks, crossfader, master queue, and timeline sequencer.
+- **AI Camera Tracking**: MediaPipe vision pipeline integration for interactive motion tracking.
 
-## Run Locally
+## Quick Key Commands
+| Key | Action |
+| --- | --- |
+| `M` | Toggle Quad Projection Mapping mode |
+| `P` | Toggle Polygon Mask Pen |
+| `V` | Toggle Video Layer |
+| `C` | Regenerate Generative Visuals (Chaos) |
+| `?` | System Commands & Cheatsheet |
+| `ESC`| Close Popups & Modals |
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Development
+```bash
+npm install
+npm run dev
+npm run build
+```
